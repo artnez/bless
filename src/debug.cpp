@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <avr/pgmspace.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdarg.h>
 
 #include "debug.h"
@@ -20,17 +21,22 @@ Logger *log_init(HardwareSerial *serial, uint32_t baud) {
     logger->serial->begin(baud);
 }
 
-void log_write(const char *str) {
-    logger->serial->println(str);
-}
-
-void log_vwrite(const __FlashStringHelper *format, ...) {
+void log_write(const __FlashStringHelper *format, ...) {
     char buf[LOG_BUFSIZE];
     va_list ap;
     va_start(ap, format);
     vsnprintf_P(buf, sizeof(buf), (const char *) format, ap);
     va_end(ap);
-    log_write(buf);
+    logger->serial->print(buf);
+}
+
+void log_writeln(const __FlashStringHelper *format, ...) {
+    char buf[LOG_BUFSIZE];
+    va_list ap;
+    va_start(ap, format);
+    vsnprintf_P(buf, sizeof(buf), (const char *) format, ap);
+    va_end(ap);
+    logger->serial->println(buf);
 }
 
 /**

@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <AltSoftSerial.h>
 
 #include "ble.h"
@@ -14,12 +15,12 @@ BLE *ble;
 void setup() {
     log_init(&Serial, BAUD_RATE);
 
-    log_info(F("Configure pins..."));
+    log_writeln(F("Configure pins..."));
     pinMode(PIN_LED_WHITE, OUTPUT);
     pinMode(PIN_LED_YELLOW, OUTPUT);
     pinMode(PIN_LED_RED, OUTPUT);
 
-    log_info(F("Initializing BLE..."));
+    log_writeln(F("Initializing BLE..."));
     ble = ble_init(&BLEMini, BAUD_RATE);
 
     log_info(F("Initializing HCI..."));

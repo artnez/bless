@@ -10,21 +10,19 @@
 #define PROGMEM __attribute__((section(".progmem.data")))
 #endif
 
-#ifndef BLESS_DEBUG
-#define BLESS_DEBUG 0
+#ifdef BLESS_DEBUG
+#define log_debug(format, ...) log_writeln(format, ##__VA_ARGS__);
+#else
+#define log_debug(format, ...)
 #endif
-
-#define log_info(format, ...) log_vwrite(format, ##__VA_ARGS__);
-#define log_debug(format, ...) \
-    if (BLESS_DEBUG) log_vwrite(format, ##__VA_ARGS__);
 
 typedef struct {
     HardwareSerial *serial;
 } Logger;
 
 Logger *log_init(HardwareSerial *serial, uint32_t baud);
-void log_write(const char *str);
-void log_vwrite(const __FlashStringHelper *format, ...);
+void log_write(const __FlashStringHelper *format, ...);
+void log_writeln(const __FlashStringHelper *format, ...);
 
 int mem_available();
 
