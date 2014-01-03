@@ -7,7 +7,7 @@
 
 #define BAUD_RATE 57600
 
-AltSoftSerial Device;
+AltSoftSerial BLEMini;
 
 BLE *ble;
 
@@ -20,12 +20,12 @@ void setup() {
     pinMode(PIN_LED_RED, OUTPUT);
 
     log_info(F("Initializing BLE..."));
-    ble = ble_init(&Device, BAUD_RATE);
+    ble = ble_init(&BLEMini, BAUD_RATE);
+
+    log_info(F("Initializing HCI..."));
 
     log_info(F("Ready."));
     digitalWrite(PIN_LED_WHITE, HIGH);
-
-    log_info(F("%d"), mem_available());
 }
 
 void loop() {
