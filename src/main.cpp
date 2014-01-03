@@ -8,9 +8,11 @@
 
 #define BAUD_RATE 57600
 
-AltSoftSerial BLEMini;
+void event(const Event *event);
 
+AltSoftSerial BLEMini;
 BLE *ble;
+HCI *hci;
 
 void setup() {
     log_init(&Serial, BAUD_RATE);
@@ -23,14 +25,13 @@ void setup() {
     log_writeln(F("Initializing BLE..."));
     ble = ble_init(&BLEMini, BAUD_RATE);
 
-    log_info(F("Initializing HCI..."));
-
-    log_info(F("Ready."));
-    digitalWrite(PIN_LED_WHITE, HIGH);
+    log_writeln(F("Initializing HCI..."));
+    hci = hci_init(ble, event);
+    hci_device_init(hci);
 }
 
 void loop() {
-    if (ble_available(ble)) {
-        digitalWrite(PIN_LED_YELLOW, HIGH);
-    }
+    hci_update(hci);
 }
+
+void event(const Event *event) {}

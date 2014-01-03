@@ -1,6 +1,5 @@
 #include <AltSoftSerial.h>
 #include <stdint.h>
-#include <stdlib.h>
 
 #include "ble.h"
 

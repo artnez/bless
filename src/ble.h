@@ -1,6 +1,7 @@
 #ifndef __BLESS_BLE_H
 #define __BLESS_BLE_H
 
+#include <AltSoftSerial.h>
 #include <stdint.h>
 
 typedef struct {
