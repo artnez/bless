@@ -16,13 +16,12 @@ int ble_available(const BLE *ble) {
 }
 
 int ble_read(const BLE *ble) {
+    delay(10);
     return ble->serial->read();
 }
 
 void ble_write(const BLE *ble, const uint8_t *bytes, size_t len) {
-    #if BLESS_DEBUG
-    ble_log_write(bytes, len);
-    #endif
+    delay(10);
     ble->serial->write(bytes, len);
 }
 

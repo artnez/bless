@@ -75,8 +75,6 @@ void hci_send(const HCI *hci, const Message *msg) {
 
     ble_write(hci->ble, (uint8_t *) msg, sizeof(Message) - sizeof(msg->data));
     ble_write(hci->ble, (uint8_t *) msg->data, msg->data_size);
-
-    delay(50);
 }
 
 void hci_device_init(const HCI *hci) {
