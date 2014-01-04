@@ -9,8 +9,10 @@ typedef struct {
 } BLE;
 
 BLE *ble_init(AltSoftSerial *serial, uint32_t baud);
-int ble_available(BLE *ble);
-int ble_read(BLE *ble);
-void ble_write(BLE *ble, uint8_t byte);
+int ble_available(const BLE *ble);
+int ble_read(const BLE *ble);
+void ble_write(const BLE *ble, const uint8_t *bytes, size_t len);
+
+void ble_log_write(const uint8_t *bytes, size_t len);
 
 #endif
