@@ -18,6 +18,6 @@ typedef struct {
 } DB;
 
 DB *db_init();
-int db_store(DB *db, void *data, size_t size);
+int db_store(DB *db, const void *data, size_t size);
 
 #endif

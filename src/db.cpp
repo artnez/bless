@@ -10,7 +10,7 @@ DB *db_init() {
     return db;
 }
 
-int db_store(DB *db, void *data, size_t size) {
+int db_store(DB *db, const void *data, size_t size) {
     if (db->len >= DB_MAX_RECORDS) {
         return 0;
     }
