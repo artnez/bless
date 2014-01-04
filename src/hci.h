@@ -84,6 +84,5 @@ void message_free(Message *message);
 
 void hci_log_message(const Message *msg);
 void hci_log_event(const Event *event);
-void hci_log_data(const void *data, uint8_t size);
 
 #endif

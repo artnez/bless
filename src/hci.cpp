@@ -66,18 +66,12 @@ Event *hci_receive(const HCI *hci) {
         event->data = data;
     }
 
-    #ifdef BLESS_DEBUG
     hci_log_event(event);
-    #endif
-
     return event;
 }
 
 void hci_send(const HCI *hci, const Message *msg) { 
-    #ifdef BLESS_DEBUG
     hci_log_message(msg);
-    #endif
-
     ble_write(hci->ble, (uint8_t *) msg, sizeof(Message) - sizeof(msg->data));
     ble_write(hci->ble, (uint8_t *) msg->data, msg->data_size);
 }
@@ -136,36 +130,23 @@ void message_free(Message *msg) {
 }
 
 void hci_log_message(const Message *msg) {
-    log_writeln(F(""));
-    log_writeln(F("> message"));
-    log_writeln(F("> type: %#04x"), msg->type);
-    log_writeln(F("> code: %#06x"), msg->opcode);
-    log_writeln(F("> size: %d"), msg->data_size);
+    DEBUG("> message");
+    DEBUG("> type: %#04x", msg->type);
+    DEBUG("> code: %#06x", msg->opcode);
+    DEBUG("> size: %d", msg->data_size);
     if (msg->data_size > 0) {
-        log_write(F("> data: "));
-        hci_log_data(msg->data, msg->data_size);
-        log_writeln(F(""));
+        DEBUG_DATA("> data: ", msg->data, msg->data_size);
+        DEBUG("");
     }
-    log_writeln(F(""));
 }
 
 void hci_log_event(const Event *event) {
-    log_writeln(F(""));
-    log_writeln(F("< event"));
-    log_writeln(F("< status: %#02x"), event->status);
-    log_writeln(F("< type: %#06x"), event->type);
-    log_writeln(F("< size: %#04x"), event->data_size);
+    DEBUG("< event");
+    DEBUG("< status: %#02x", event->status);
+    DEBUG("< type: %#06x", event->type);
+    DEBUG("< size: %#04x", event->data_size);
     if (event->data_size > 0) {
-        log_write(F("< data: "));
-        hci_log_data(event->data, event->data_size);
-        log_writeln(F(""));
+        DEBUG_DATA("< data: ", event->data, event->data_size);
+        DEBUG("");
     }
-    log_writeln(F(""));
-}
-
-void hci_log_data(const void *data, uint8_t size) {
-    uint8_t *p = (uint8_t *) data;
-    for (int i=0; i<size; i++) {
-        log_write(F("%02x "), *(p + i));
-    };
 }

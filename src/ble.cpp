@@ -32,20 +32,3 @@ void ble_write(const BLE *ble, const uint8_t *bytes, size_t len) {
     ble->serial->write(bytes, len);
     digitalWrite(PIN_LED_TX, LOW);
 }
-
-void ble_log_write(const uint8_t *bytes, size_t len) {
-    if (len < 1) {
-        return;
-    }
-    log_writeln(F(""));
-    log_writeln(F("> write"));
-    for (int i=0; i<len; i++) {
-        if (i % 8 == 0) {
-            if (i) log_writeln(F(""));
-            log_write(F("> "));
-        }
-        log_write(F("%02x "), bytes[i]);
-    }
-    log_writeln(F(""));
-    log_writeln(F(""));
-}

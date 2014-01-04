@@ -39,6 +39,13 @@ void log_writeln(const __FlashStringHelper *format, ...) {
     logger->serial->println(buf);
 }
 
+void log_data(const void *data, uint8_t size) {
+    uint8_t *p = (uint8_t *) data;
+    for (int i=0; i<size; i++) {
+        log_write(F("%02x "), *(p + i));
+    };
+}
+
 /**
  * Returns the amount of bytes remaining on the heap. Does not take
  * fragmentation into account.
