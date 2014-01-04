@@ -29,7 +29,8 @@ typedef struct {
     uint8_t event_type;
     uint8_t addr_type;
     uint8_t addr[6];
-    uint8_t rssi;
+    int8_t rssi;
+    int8_t data_size;
 } Device;
 
 typedef struct {
