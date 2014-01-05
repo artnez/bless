@@ -111,10 +111,6 @@ void hci_start_discovery(const HCI *hci) {
     message_free(msg);
 }
 
-int hci_device_store(HCI *hci, Device *device) {
-    return db_store(hci->db, device->addr, sizeof(device->addr));
-}
-
 void event_free(Event *event) {
     if (event->data_size > 0) {
         free(event->data);

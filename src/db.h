@@ -5,19 +5,17 @@
 
 #include "db.h"
 
-#define DB_MAX_RECORDS 100
-#define DB_RECORD_SIZE 6
+#define DB_MAX_ITEMS 100
+#define DB_ITEM_SIZE 6
 
 typedef struct {
-    uint8_t data[DB_RECORD_SIZE];
-} DBRecord;
+    uint8_t data[DB_ITEM_SIZE];
+} DBItem;
 
 typedef struct {
-    DBRecord entries[DB_MAX_RECORDS];
-    uint8_t len;
+    DBItem items[DB_MAX_ITEMS];
 } DB;
 
 DB *db_init();
-int db_store(DB *db, const void *data, size_t size);
 
 #endif

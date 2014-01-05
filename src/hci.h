@@ -78,8 +78,6 @@ void hci_send(const HCI *hci, const Message *msg);
 void hci_device_init(const HCI *hci);
 void hci_start_discovery(const HCI *hci);
 
-int hci_device_store(HCI *hci, Device *device);
-
 void event_free(Event *event);
 void message_free(Message *message);
 
