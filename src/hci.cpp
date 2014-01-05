@@ -104,7 +104,7 @@ void hci_device_init(const HCI *hci) {
         WARN("Could not allocate MessageDeviceInit");
         return;
     }
-    data->profile_role = HCI_PROFILE_ROLE_OBSERVER;
+    data->profile_role = HCI_PROFILE_ROLE_CENTRAL;
     data->max_scan_res = 5;
     memset(&data->irk, 0, sizeof(data->irk));
     memset(&data->csrk, 0, sizeof(data->csrk));
