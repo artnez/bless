@@ -81,6 +81,7 @@ void event(const Event *event) {
     }
 
     if (event->type == HCI_EVENT_DEVICE_DISCOVERY_DONE) {
+        hci->cycles ++;
         digitalWrite(PIN_LED_ERROR, LOW);
         INFO("Discovery complete.");
         INFO("Memory: %d", mem_available());

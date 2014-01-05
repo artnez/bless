@@ -33,7 +33,6 @@ void hci_update(HCI *hci) {
         event_free(event);
     }
     if (events) {
-        hci->cycles ++;
         hci->events += events;
     }
 }
