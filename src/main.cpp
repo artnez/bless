@@ -7,7 +7,7 @@
 #include "debug.h"
 #include "hci.h"
 #include "pin.h"
-#include "state.h"
+#include "timer.h"
 
 #define BAUD_RATE 57600
 
@@ -23,7 +23,7 @@ void timeout();
 AltSoftSerial BLEMini;
 BLE *ble;
 HCI *hci;
-State *state;
+Timer *timer;
 
 void setup() {
     log_init(&Serial, BAUD_RATE);
@@ -35,7 +35,7 @@ void setup() {
 
     ble = ble_init(&BLEMini, BAUD_RATE);
     hci = hci_init(ble, db_init(), event);
-    state = state_init();
+    timer = timer_init(timeout);
 
     INFO("Initialize CC2540...");
     state_set(state, STATE_INITIALZING, TIMEOUT_INITIALIZE);
