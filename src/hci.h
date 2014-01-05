@@ -7,6 +7,7 @@
 #include "db.h"
 
 #define HCI_PROFILE_ROLE_CENTRAL 0x08
+#define HCI_PROFILE_ROLE_OBSERVER 0x02
 
 #define HCI_PACKET_TYPE_COMMAND 0x01
 #define HCI_PACKET_TYPE_EVENT 0x04
@@ -34,8 +35,8 @@ typedef struct {
 } Device;
 
 typedef struct {
-    uint8_t status;
     uint16_t type;
+    uint8_t status;
     uint8_t data_size;
     void *data;
 } Event;
@@ -67,6 +68,8 @@ typedef struct {
     BLE *ble;
     DB *db;
     Callback cb;
+    uint64_t cycles;
+    uint64_t events;
 } HCI;
 
 HCI *hci_init(BLE *ble, DB *db, Callback cb);
