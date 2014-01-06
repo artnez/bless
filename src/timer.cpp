@@ -1,9 +1,11 @@
 #include <Arduino.h>
 
+#include "debug.h"
 #include "timer.h"
 
 Timer *timer_init(void (*cb)(void)) {
-    Timer *timer = (Timer *) malloc(sizeof(Timer));
+    ALLOC_STRUCT(timer, Timer);
+    if (!timer) return NULL;
     timer->code = 0;
     timer->active = 0;
     timer->timeout = 10000;

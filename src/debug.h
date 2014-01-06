@@ -26,6 +26,14 @@
     #define DEBUG_DUMP(fmt, ptr, size, ...)
 #endif
 
+#define ALLOC(N, T, S) \
+    T *N = (T *) malloc(S); \
+    if (!N) { \
+        WARN("Could not allocate #T (%ld) in %s:%s", S, __FILE__, __LINE__); \
+    }
+
+#define ALLOC_STRUCT(N, T) ALLOC(N, T, sizeof(T));
+
 typedef struct {
     HardwareSerial *serial;
 } Logger;

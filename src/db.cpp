@@ -3,8 +3,10 @@
 #include <string.h>
 
 #include "db.h"
+#include "debug.h"
 
 DB *db_init() {
-    DB *db = (DB *) malloc(sizeof(DB));
+    ALLOC_STRUCT(db, DB);
+    if (!db) return NULL;
     return db;
 }

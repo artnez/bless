@@ -8,11 +8,8 @@
 #include "pin.h"
 
 HCI *hci_init(BLE *ble, DB *db, Callback cb) {
-    HCI *hci = (HCI *) malloc(sizeof(HCI));
-    if (!hci) {
-        WARN("Could not allocate HCI");
-        return NULL;
-    }
+    ALLOC_STRUCT(hci, HCI);
+    if (!hci) return NULL;
     hci->ble = ble;
     hci->db = db;
     hci->cb = cb;
@@ -25,9 +22,7 @@ void hci_update(HCI *hci) {
     uint8_t events = 0;
     while (ble_available(hci->ble)) {
         Event *event = hci_receive(hci);
-        if (!event) {
-            continue;
-        }
+        if (!event) continue;
         events ++;
         hci->cb(event);
         event_free(event);
@@ -38,12 +33,8 @@ void hci_update(HCI *hci) {
 }
 
 Event *hci_receive(const HCI *hci) {
-    Event *event = (Event *) malloc(sizeof(Event)); 
-    if (!event) {
-        WARN("Could not allocate HCI Event.");
-        return NULL;
-    }
-
+    ALLOC_STRUCT(event, Event);
+    if (!event) return NULL;
     uint8_t packet_type = ble_read(hci->ble);
     uint8_t event_code = ble_read(hci->ble);
 
@@ -75,14 +66,12 @@ Event *hci_receive(const HCI *hci) {
 
     event->data_size -= offset;
     if (event->data_size > 0) {
-        uint8_t *data = (uint8_t *) malloc(event->data_size);
+        ALLOC(data, uint8_t, event->data_size);
         if (!data) {
-            WARN("Could not allocate Event data (%d bytes)", event->data_size);
             event->data_size = 0;
             event_free(event);
             return NULL;
         }
-
         memcpy(data, buffer + offset, event->data_size);
         event->data = data;
     }
@@ -98,11 +87,8 @@ void hci_send(const HCI *hci, const Message *msg) {
 }
 
 void hci_device_init(const HCI *hci) {
-    MessageDeviceInit *data = (MessageDeviceInit *) malloc(sizeof(MessageDeviceInit));
-    if (!data) {
-        WARN("Could not allocate MessageDeviceInit");
-        return;
-    }
+    ALLOC_STRUCT(data, MessageDeviceInit);
+    if (!data) return;
     data->profile_role = HCI_PROFILE_ROLE_CENTRAL;
     data->max_scan_res = 5;
     memset(&data->irk, 0, sizeof(data->irk));
@@ -110,9 +96,9 @@ void hci_device_init(const HCI *hci) {
     memset(&data->sign_counter, 0, sizeof(data->sign_counter));
     data->sign_counter[0] = 0x01;
 
-    Message *msg = (Message *) malloc(sizeof(Message));
+    ALLOC_STRUCT(msg, Message);
     if (!msg) {
-        WARN("Could not allocate Message");
+        free(data);
         return;
     }
     msg->type = HCI_PACKET_TYPE_COMMAND;
@@ -125,18 +111,15 @@ void hci_device_init(const HCI *hci) {
 }
 
 void hci_start_discovery(const HCI *hci) {
-    MessageDiscover *data = (MessageDiscover *) malloc(sizeof(MessageDiscover));
-    if (!data) {
-        WARN("Could not allocate MessageDiscover");
-        return;
-    }
+    ALLOC_STRUCT(data, MessageDiscover);
+    if (!data) return;
     data->mode = HCI_DISCOVERY_MODE_ALL;
     data->active_scan = 1;
     data->white_list = 0;
 
-    Message *msg = (Message *) malloc(sizeof(Message));
+    ALLOC_STRUCT(msg, Message);
     if (!msg) {
-        WARN("Could not allocate Message");
+        free(data);
         return;
     }
     msg->type = HCI_PACKET_TYPE_COMMAND;

@@ -9,11 +9,8 @@
 #define BLE_TX_DELAY 100
 
 BLE *ble_init(AltSoftSerial *serial, uint32_t baud) {
-    BLE *ble = (BLE *) malloc(sizeof(BLE));
-    if (!ble) {
-        WARN("Could not allocate BLE");
-        return NULL;
-    }
+    ALLOC_STRUCT(ble, BLE);
+    if (!ble) return NULL;
     ble->serial = serial;
     ble->serial->begin(baud);
     return ble;
