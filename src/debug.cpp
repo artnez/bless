@@ -60,7 +60,7 @@ int mem_available() {
     int stack_pos, heap_pos;
     int v;
 
-    stack_pos = (int) &v;
-    heap_pos = (int) (__brkval == 0 ? &__heap_start : __brkval);
+    stack_pos = (intptr_t) &v;
+    heap_pos = (intptr_t) (__brkval == 0 ? &__heap_start : __brkval);
     return stack_pos - heap_pos;
 }
