@@ -114,7 +114,7 @@ void hci_start_discovery(const HCI *hci) {
     ALLOC_STRUCT(data, MessageDiscover);
     if (!data) return;
     data->mode = HCI_DISCOVERY_MODE_ALL;
-    data->active_scan = 1;
+    data->active_scan = 0;
     data->white_list = 0;
 
     ALLOC_STRUCT(msg, Message);
