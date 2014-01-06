@@ -23,7 +23,9 @@ void event(const Event *event);
 void blink_active_led();
 
 AltSoftSerial BLEMini;
+
 BLE *ble;
+DB *db;
 HCI *hci;
 Timer *timer;
 
@@ -37,7 +39,8 @@ void setup() {
     pinMode(PIN_LED_TX, OUTPUT);
 
     ble = ble_init(&BLEMini, BAUD_RATE);
-    hci = hci_init(ble, db_init(), event);
+    db = db_init();
+    hci = hci_init(ble, event);
     timer = timer_init(timeout);
 
     INFO("Initialize CC2540...");
@@ -67,11 +70,11 @@ void event(const Event *event) {
     }
 
     if (event->type == HCI_EVENT_DEVICE_INFORMATION) {
-        Device *device = (Device *) event->data;
-        DUMP("Device Address: ", &device->addr, sizeof(device->addr));
-        INFO("Device Response: %#04x", device->event_type);
+        Device *device = device_init(event->data);
+        DUMP("Device Addr: ", &device->addr, sizeof(device->addr));
         INFO("Device RSSI: %d", device->rssi);
-        //INFO("Device Stored: %d", store(device));
+        INFO("Saved Index: %d", db_save(db, device));
+        device_free(device);
         return;
     }
 
@@ -80,9 +83,12 @@ void event(const Event *event) {
         digitalWrite(PIN_LED_TIMEOUT, LOW);
         INFO("Discovery complete.");
         INFO("Memory: %d", mem_available());
-        INFO("Cycles: %d", hci->cycles);
-        INFO("Events: %d", hci->events);
-        INFO("Running time: %ld", millis());
+        INFO("Runtime: %ld", millis());
+        INFO("HCI Cycles: %d", hci->cycles);
+        INFO("HCI Events: %d", hci->events);
+        INFO("");
+        INFO("%d Known Devices", db_size(db));
+        db_log(db);
         INFO("");
         discover();
         return;

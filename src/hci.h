@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 #include "ble.h"
-#include "db.h"
 
 #define HCI_PROFILE_ROLE_CENTRAL 0x08
 
@@ -32,11 +31,8 @@
 #define HCI_DEVICE_ADV_SCAN_RESPONSE 0x04
 
 typedef struct {
-    uint8_t event_type;
-    uint8_t addr_type;
     uint8_t addr[6];
     int8_t rssi;
-    int8_t data_size;
 } Device;
 
 typedef struct {
@@ -71,13 +67,12 @@ typedef void (*Callback)(const Event *event);
 
 typedef struct {
     BLE *ble;
-    DB *db;
     Callback cb;
     uint64_t cycles;
     uint64_t events;
 } HCI;
 
-HCI *hci_init(BLE *ble, DB *db, Callback cb);
+HCI *hci_init(BLE *ble, Callback cb);
 void hci_update(HCI *hci);
 
 Event *hci_receive(const HCI *hci);
@@ -85,6 +80,9 @@ void hci_send(const HCI *hci, const Message *msg);
 
 void hci_device_init(const HCI *hci);
 void hci_start_discovery(const HCI *hci);
+
+Device *device_init(void *data);
+void device_free(Device *device);
 
 void event_free(Event *event);
 void message_free(Message *message);

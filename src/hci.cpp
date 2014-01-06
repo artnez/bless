@@ -2,16 +2,14 @@
 #include <stdlib.h>
 
 #include "ble.h"
-#include "db.h"
 #include "debug.h"
 #include "hci.h"
 #include "pin.h"
 
-HCI *hci_init(BLE *ble, DB *db, Callback cb) {
+HCI *hci_init(BLE *ble, Callback cb) {
     ALLOC_STRUCT(hci, HCI);
     if (!hci) return NULL;
     hci->ble = ble;
-    hci->db = db;
     hci->cb = cb;
     hci->cycles = 0;
     hci->events = 0;
@@ -129,6 +127,24 @@ void hci_start_discovery(const HCI *hci) {
 
     hci_send(hci, msg);
     message_free(msg);
+}
+
+Device *device_init(void *data) {
+    // data is expected to have this pattern:
+    // +----------+-----------+------+------+
+    // | evt type | addr type | addr | rssi |
+    // +----------+-----------+------+------+
+    // |    1B    |    1B     |  6B  |  1B  |
+    // +----------+-----------+------+------+
+    char *ptr = (char *) data;
+    ALLOC_STRUCT(device, Device);
+    memcpy(&device->addr, ptr + 2, 6);
+    memcpy(&device->rssi, ptr + 8, 1);
+    return device;
+}
+
+void device_free(Device *device) {
+    free(device);
 }
 
 void event_free(Event *event) {
