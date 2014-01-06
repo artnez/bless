@@ -20,7 +20,7 @@ void timer_set(Timer *timer, uint8_t code, unsigned long timeout) {
 }
 
 void timer_update(Timer *timer) {
-    if (millis() - timer->updated < timer->timeout) {
+    if (!timer->active || millis() - timer->updated < timer->timeout) {
         return;
     }
     timer->active = 0;
