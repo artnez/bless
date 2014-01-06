@@ -63,6 +63,15 @@ void discover() {
 }
 
 void event(const Event *event) {
+    // In the future, timestamps will be used to expire old items out of
+    // memory. For now, just empty the DB on every cycle.
+    static uint64_t current_cycle = 0;
+    if (hci->cycles != current_cycle) {
+        current_cycle = hci->cycles;
+        INFO("Clearing database.");
+        db_clear(db);
+    }
+
     if (event->type == HCI_EVENT_DEVICE_INIT_DONE) {
         INFO("CC250 initialized.");
         discover();

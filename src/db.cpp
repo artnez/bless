@@ -43,6 +43,11 @@ int db_save(DB *db, const Device *device) {
     return index;
 }
 
+void db_clear(DB *db) {
+    db->index = 0;
+    memset(db->data, 0, sizeof(db->data));
+}
+
 int db_cmp(const uint8_t *a, const uint8_t *b, size_t s) {
     for (int i=0; i<s; i++) {
         if (a[i] != b[i]) {
