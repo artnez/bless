@@ -17,7 +17,6 @@
 #define STATE_INITIALZING 1 << 0
 #define STATE_DISCOVERING 1 << 1
 
-void initialize();
 void discover();
 void timeout();
 void event(const Event *event);
@@ -33,7 +32,7 @@ void setup() {
     INFO("Starting up...");
 
     pinMode(PIN_LED_ACTIVE, OUTPUT);
-    pinMode(PIN_LED_ERROR, OUTPUT);
+    pinMode(PIN_LED_TIMEOUT, OUTPUT);
     pinMode(PIN_LED_RX, OUTPUT);
     pinMode(PIN_LED_TX, OUTPUT);
 
@@ -41,20 +40,16 @@ void setup() {
     hci = hci_init(ble, db_init(), event);
     timer = timer_init(timeout);
 
-    initialize();
+    INFO("Initialize CC2540...");
+    delay(1000);
+    timer_set(timer, STATE_INITIALZING, TIMEOUT_INITIALIZE);
+    hci_device_init(hci);
 }
 
 void loop() {
     blink_active_led();
     hci_update(hci);
     timer_update(timer);
-}
-
-void initialize() {
-    INFO("Initialize CC2540...");
-    delay(1000);
-    timer_set(timer, STATE_INITIALZING, TIMEOUT_INITIALIZE);
-    hci_device_init(hci);
 }
 
 void discover() {
@@ -82,7 +77,7 @@ void event(const Event *event) {
 
     if (event->type == HCI_EVENT_DEVICE_DISCOVERY_DONE) {
         hci->cycles ++;
-        digitalWrite(PIN_LED_ERROR, LOW);
+        digitalWrite(PIN_LED_TIMEOUT, LOW);
         INFO("Discovery complete.");
         INFO("Memory: %d", mem_available());
         INFO("Cycles: %d", hci->cycles);
@@ -97,21 +92,13 @@ void event(const Event *event) {
 }
 
 void timeout() {
+    digitalWrite(PIN_LED_TIMEOUT, HIGH);
     INFO("State %d timeout in %ldms. Reset...", timer->code, timer->timeout);
-    timer_set(timer, timer->code, timer->timeout);
-    switch (timer->code) {
-        case STATE_INITIALZING:
-            initialize();
-            break;
-        case STATE_DISCOVERING:
-            digitalWrite(PIN_LED_ERROR, HIGH);
-            discover();
-            break;
-        default:
-            INFO("Rebooting...");
-            delay(1000);
-            asm volatile ("jmp 0");
-    }
+    delay(1000);
+
+    // XXX: This isn't a true reset. Use the watchdog timer:
+    // http://www.nongnu.org/avr-libc/user-manual/group__avr__watchdog.html
+    asm volatile ("jmp 0");
 }
 
 void blink_active_led() {
