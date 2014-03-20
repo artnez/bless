@@ -1,9 +1,9 @@
 BLESS
 =====
 
-**B**luetooth **L**ow **E**nergy **S**canning **S**ystem. A device that
-maintains an ephemeral log of nearby peripherals broadcasting on the
-[Bluetooth low energy][ble] (BLE) protocol.
+Bluetooth Low Energy Scanning System. A device that maintains an ephemeral log
+of nearby peripherals broadcasting on the [Bluetooth low energy][ble] (BLE)
+protocol.
 
 Requirements
 ------------
